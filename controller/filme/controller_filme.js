@@ -97,7 +97,33 @@ const buscarfilme = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
-        let result = await filmeDAO.selectByIdFilme(id)
+        //validação para garantir q o id seja um numero valido
+        if(String(id).replaceAll(' ', '') == '' || id == null || id == undefined || isNaN(id)){
+            vegapunk.ERROR_BAD_REQUEST.field = '[ID] inválido'
+            return vegapunk.ERROR_BAD_REQUEST //400
+        }else{
+
+        //chama a função do DAO para pesquiasar o filme pelo id
+            let result = await filmeDAO.selectByIdFilme(id)
+
+            //validação para verifiar se o DAO retornou dados ou um false
+            if(result){
+                //validação para verificar se o dao tem algum registro ou dado no array
+                if(result.length>0){
+                    vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
+                    vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                    vegapunk.DEFAULT_MESSAGE.response.filme = result
+
+                    return vegapunk.DEFAULT_MESSAGE //200
+                }else{
+                    return vegapunk.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return vegapunk.ERROR_INTERNAL_SERVER_MODEL //500(model)
+            }
+        }
+
+        
         
     } catch (error) {
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER//500(controller)
