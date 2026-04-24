@@ -54,22 +54,60 @@ try {
 
 //função para atualizar filme existente
 const atualizarfilme = async function() {
-    
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
 }
 
 //função para retornar todos os filmes existentes
 const listarfilme = async function() {
-    
+    //criar uma copia dos json do arquivo de configuração de mensagens
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+        try {
+            //chamando a função do DAO para retornar a lista de filme do Banco de Dado
+            let result = await filmeDAO.selectALLfilme()
+            
+            //validação para verificar se o DAO conseguiu processar o script no banco de dados
+            if(result){
+
+                //validação para verificar se o conteudo do ARRAY tem dados de retorno ou ta vazio
+                if(result.length>0){
+                    vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
+                    vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                    vegapunk.DEFAULT_MESSAGE.response.count = result.length
+                    vegapunk.DEFAULT_MESSAGE.response.filme = result
+
+                    return vegapunk.DEFAULT_MESSAGE
+                }else {
+                    return vegapunk.ERROR_NOT_FOUND//404
+                }
+            }else{
+                return vegapunk.ERROR_INTERNAL_SERVER_MODEL//500(model)
+            }
+
+        } catch (error) {
+            console.log(error)
+            return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER//500(controller)
+            
+        }
 }
 
 //função  para retornar um filme filtrando pelo ID
-const buscarfilme = async function() {
-    
+const buscarfilme = async function(id) {
+
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+    try {
+        let result = await filmeDAO.selectByIdFilme(id)
+        
+    } catch (error) {
+        return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER//500(controller)
+    }
+
 }
 
 //função para excluir um filme
 const excluirfilme =async function() {
-    
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
 }
 
 //função para validar os dados do filme

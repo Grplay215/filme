@@ -36,6 +36,12 @@ app.post('/v1/senai/locadora/filme', bodyparserJSON, async function(request, res
 
 })
 
+app.get('/v1/senai/locadora/filme', async function(request, response) {
+    let result = await controllerfilme.listarfilme()
+
+    response.status (result.status_code)
+    response.json(result)
+})
 
 
 
