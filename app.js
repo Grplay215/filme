@@ -79,6 +79,31 @@ app.delete('/v1/senai/locadora/filme/:id', async function(request, response) {
     response.json(result)
 })
 
+app.get('/v1/senai/locadora/help',  function (request, response) {
+    let result = controllerfilme.help()
+    let docAPI = {
+        "api-description": "API para manipular dados de filmes de uma locadora",
+        "date": "2026-05-06",
+        "development": "Gabriel Renato",
+        "version": 1.18,
+        "endpoints": [
+            {   "rota1": "/v1/senai/locadora/filme",
+                "description": "Para adicionar um novo filme no Banco de Dados da locadora"
+            },
+            {   "rota2": "/v1/senai/locadora/filme",
+                "description": "Retorna a lista de todos os filmes cadastrados na locadora"
+            },
+            {   "rota3": "/v1/senai/locadora/filme/:id",
+                "description": "Retorna um filme buscando pelo id"
+            },
+            {   "rota4": "/v1/senai/locadora/filme/:id",
+                "description": "Apaga o filme desejado pelo id"
+            },
+        ]
+    }
+    response.status(result.status_code)
+    response.json(docAPI)
+})
 
 app.listen(7070, function(){
     console.log('API aguardadndo novas requisições ...')

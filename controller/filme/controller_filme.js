@@ -30,12 +30,16 @@ try {
         return validar //400
     }else{
         //encaminha os dados do filme para o DAO inserir no banco de dados
-        let resultado = await filmeDAO.insertFilme(filme)
+        let resultado = await filmeDAO.insertFilme(await tratarDados(filme))
         //console.log(resultado)
         if(resultado){ //201
+            //cria o id no json no filme e adiciona o ID gerado no DAO
+            filme.id = resultado
+
             vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_CREATED_ITEM.status
             vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_CREATED_ITEM.status_code
             vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_CREATED_ITEM.message
+            vegapunk.DEFAULT_MESSAGE.response = filme
 
             return vegapunk.DEFAULT_MESSAGE//201
         }else{ //erro 500(model)
@@ -47,6 +51,7 @@ try {
         return vegapunk.ERROR_CONTENT_TYPE
     } 
 } catch (error) {
+    console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500(controller)
 }
 
@@ -73,12 +78,13 @@ const atualizarfilme = async function(filme, contentType, id) {
                         filme.id = Number(id)
 
                         //chama a função para atualizar o filme no banco de dados
-                        let result = await filmeDAO.updatFilme(filme)
+                        let result = await filmeDAO.updatFilme(await tratarDados(filme))
 
                         if(result){
                             vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
                             vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
                             vegapunk.DEFAULT_MESSAGE.message        = vegapunk.SUCESS_UPDATED_ITEM.message
+                            vegapunk.DEFAULT_MESSAGE.response       = filme
 
                             return vegapunk.DEFAULT_MESSAGE// 200 (atualização)
                         }else{
@@ -177,25 +183,27 @@ const excluirfilme =async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
+        //chama a função buscarfilme para validar se o filme existe
         let validarid = await buscarfilme(id)
 
-        if(validarid){
+        if(validarid.status){
             let result = await filmeDAO.deleteFilme(id)
             if(result){
 
                 vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_DELETE_ITEM.status
-                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_DELETE_ITEM.status_code
+                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
                 vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_DELETE_ITEM.message
 
                 return vegapunk.DEFAULT_MESSAGE
                 
-            } 
+            } else{
+                return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+            }
 
         }else{
             return validarid
         }
     } catch (error) {
-        console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -227,10 +235,31 @@ const validardados = async function(filme) {
         vegapunk.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     } else{
+        //tratamento para eliminar a chegada das aspas (') como caracter inválido
+        
         return false
     }
 }
+
+const tratarDados = async function(filme) {
+    filme.nome =    filme.nome.replaceAll("'", "")
+    filme.sinopse =    filme.sinopse.replaceAll("'", "")
+    filme.capa =    filme.capa.replaceAll( "'", "")
+    filme.data_lancamento =    filme.data_lancamento.replaceAll("'", "")
+    filme.duracao =    filme.duracao.replaceAll("'", "")
+    filme.valor =    filme.valor.replaceAll("'", "")
+    filme.avaliacao =    filme.avaliacao.replaceAll("'", "")
+
+    return filme
+}
  
+const help = function(){
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+    vegapunk.SUCESS_RESPONSE.message = 'halp entregue com sucesso'
+
+    return vegapunk.SUCESS_RESPONSE
+}
 
 module.exports ={
     inserirNovoFilme,
@@ -238,4 +267,5 @@ module.exports ={
     listarfilme,
     buscarfilme,
     excluirfilme,
+    help,
 }

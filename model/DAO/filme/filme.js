@@ -36,13 +36,11 @@ const insertFilme = async function(filme) {
             if('${filme.avaliacao}' = '', null, '${filme.avaliacao}')
         );`
 
-        //console.log(sql)
-
         //encaminha para o BD o scriptSQL
         let luffy = await knexConection.raw(sql)
-
+    
         if(luffy)
-            return true
+            return luffy[0].insertId
         else
             return false
 
@@ -120,8 +118,7 @@ const deleteFilme = async function (id) {
 
        let result = await knexConection.raw(sql)
       
-        return result
-        
+       return result
    } catch (error) {
     return false
    } 
