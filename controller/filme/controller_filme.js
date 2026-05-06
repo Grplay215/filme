@@ -53,8 +53,50 @@ try {
 }
 
 //função para atualizar filme existente
-const atualizarfilme = async function() {
+const atualizarfilme = async function(filme, contentType, id) {
+
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+        try {
+            //validação para verificar se o conteudo é um json
+            if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+                //chama a função validar filme e validar se o id está correto, se ele existe no banco e se o filme existe
+                let resultbuscarfilme = await buscarfilme(id)
+
+                if(resultbuscarfilme.status){
+                    //chama a função para validar os dados para alteração do filme (body)
+                    let validar = await validardados(filme)
+
+                    if(!validar){
+
+                        //adiciona um atributo id no json de filme, para enviar ao  dao um unico objeto
+                        filme.id = Number(id)
+
+                        //chama a função para atualizar o filme no banco de dados
+                        let result = await filmeDAO.updatFilme(filme)
+
+                        if(result){
+                            vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
+                            vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
+                            vegapunk.DEFAULT_MESSAGE.message        = vegapunk.SUCESS_UPDATED_ITEM.message
+
+                            return vegapunk.DEFAULT_MESSAGE// 200 (atualização)
+                        }else{
+                            return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+                        }
+                    }else{
+                        return validar //400 de validação dos campos do banco de dados
+                    }
+                }else {
+                    return resultbuscarfilme //400(id invalido) ou 404(n encontrado) ou 500(controller ou dao)
+                }
+            }else{
+                return vegapunk.ERROR_CONTENT_TYPE
+            }
+            
+        } catch (error) {
+            return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controller
+        }
 }
 
 //função para retornar todos os filmes existentes
@@ -85,7 +127,6 @@ const listarfilme = async function() {
             }
 
         } catch (error) {
-            console.log(error)
             return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER//500(controller)
             
         }
@@ -98,7 +139,7 @@ const buscarfilme = async function(id) {
 
     try {
         //validação para garantir q o id seja um numero valido
-        if(String(id).replaceAll(' ', '') == '' || id == null || id == undefined || isNaN(id)){
+        if( id == undefined || String(id).replaceAll(' ', '') == '' || id == null || isNaN(id) || id <= 0){
             vegapunk.ERROR_BAD_REQUEST.field = '[ID] inválido'
             return vegapunk.ERROR_BAD_REQUEST //400
         }else{
@@ -132,8 +173,31 @@ const buscarfilme = async function(id) {
 }
 
 //função para excluir um filme
-const excluirfilme =async function() {
+const excluirfilme =async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+    try {
+        let validarid = await buscarfilme(id)
+
+        if(validarid){
+            let result = await filmeDAO.deleteFilme(id)
+            if(result){
+
+                vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_DELETE_ITEM.status
+                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_DELETE_ITEM.status_code
+                vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_DELETE_ITEM.message
+
+                return vegapunk.DEFAULT_MESSAGE
+                
+            } 
+
+        }else{
+            return validarid
+        }
+    } catch (error) {
+        console.log(error)
+        return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
 }
 
 //função para validar os dados do filme
@@ -141,25 +205,25 @@ const validardados = async function(filme) {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(filme.nome                   == ''                    || filme.nome            == null         || filme.nome            == undefined         || filme.nome.length > 80){
+    if(filme.nome                   == undefined                       || filme.nome            == null         || filme.nome            == ''         || filme.nome.length > 80){
         vegapunk.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if(filme.sinopse          == ''                    || filme.sinopse         == null         || filme.sinopse         == undefined ){
+    }else if(filme.sinopse          == undefined                       || filme.sinopse         == null         || filme.sinopse         == '' ){
         vegapunk.ERROR_BAD_REQUEST.field = '[SINOPSE] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if (filme.capa            == ''                    || filme.capa            == null         || filme.capa            == undefined         || filme.capa.length > 255){
+    }else if (filme.capa            == undefined                       || filme.capa            == null         || filme.capa            == ''         || filme.capa.length > 255){
         vegapunk.ERROR_BAD_REQUEST.field = '[CAPA] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if (filme.data_lancamento == ''                    || filme.data_lancamento == null         || filme.data_lancamento == undefined         || filme.data_lancamento.length != 10){
+    }else if (filme.data_lancamento == undefined                       || filme.data_lancamento == null         || filme.data_lancamento == ''         || filme.data_lancamento.length != 10){
         vegapunk.ERROR_BAD_REQUEST.field = '[DATA DE LANÇAMENTO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if(filme.duracao          == ''                    || filme.duracao         == null         || filme.duracao         == undefined         || filme.duracao.length < 5 ){
+    }else if(filme.duracao          == undefined                       || filme.duracao         == null         || filme.duracao         == ''         || filme.duracao.length < 5 ){
         vegapunk.ERROR_BAD_REQUEST.field = '[DURAÇÃO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if(filme.valor            == undefined             || isNaN(filme.valor)                    || filme.valor.length > 5){
+    }else if(filme.valor            == undefined                       || isNaN(filme.valor)                    || filme.valor.length > 5){
         vegapunk.ERROR_BAD_REQUEST.field = '[VALOR] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else if(filme.avaliacao        == undefined             || isNaN(filme.avaliacao)                || filme.avaliacao.length > 3){
+    }else if(filme.avaliacao        == undefined                       || isNaN(filme.avaliacao)                || filme.avaliacao.length > 3){
         vegapunk.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     } else{

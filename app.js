@@ -52,6 +52,32 @@ app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
     response.json(result)
 })
 
+app.put('/v1/senai/locadora/filme/:id', bodyparserJSON, async function(request, response){
+    //recebe o content-type para validar se é jsom
+    let contentType = request.headers['content-type']
+
+    //recebe o id do registro a ser atualizado
+    let id = request.params.id
+
+    //recebe os dados do body q serão atualizados/modificados no BD
+    let dados = request.body
+
+    //chama a função para atualizar o filme, devemos encaminhar as 3 na mesma sequencia colocada na hr da criação da função na controller
+    let result = await controllerfilme.atualizarfilme(dados, contentType, id)
+
+   
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.delete('/v1/senai/locadora/filme/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllerfilme.excluirfilme(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
 
 
 app.listen(7070, function(){

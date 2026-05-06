@@ -41,7 +41,22 @@ insert into tbl_filme(
     '2026-04-02',
     '01:39:00',
     '50.60',
-    '3'
+    if('', null, 2)
 );
 
 select * from tbl_filme;
+select * from tbl_filme order by id desc;
+select * from tbl_filme where id = 20;
+
+update tbl_filme set
+	nome= 'filme 01',
+    sinopse ='hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+    capa = 'hyrrrrrrrrrrrrrhhhhhhhhhhhhhhhhhrrrrrrrrrrrrrrrrr',
+    data_lancamento ='2006-12-01',
+    duracao = '06:59:00',
+    valor = '23',
+    avaliacao = '6'
+where id = 20;
+
+
+#delete from tbl_filme where id > 0
