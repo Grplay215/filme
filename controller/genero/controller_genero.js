@@ -180,7 +180,7 @@ const validardados = async function(genero) {
     }
 }
 const tratardados = async function(genero) {
-    genero.nome =    genero.genero.replaceAll("'", "")
+    genero.genero =    genero.genero.replaceAll("'", "")
 
     return genero
 }

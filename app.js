@@ -135,10 +135,186 @@ app.put('/v1/senai/locadora/genero/:id', bodyparserJSON, async function(request,
 
     let result = await controllergenero.atualizargenero(dados, contentType, id)
 
-    
+
     response.status(result.status_code)
     response.json(result)
 })
+
+//-----------------------classificação----------------------XX
+app.post('/v1/senai/locadora/classificacao', bodyparserJSON, async function(request, response){
+    let dados = request.body
+    
+    let contentType = request.headers['content-type']
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao', async function(request, response) {
+    let result 
+
+    response.status (result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.put('/v1/senai/locadora/classificacao/:id', bodyparserJSON, async function(request, response){
+    
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//--------------------------sexo----------------------------XX
+app.post('/v1/senai/locadora/classificacao', bodyparserJSON, async function(request, response){
+    let dados = request.body
+    
+    let contentType = request.headers['content-type']
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao', async function(request, response) {
+    let result 
+
+    response.status (result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.put('/v1/senai/locadora/classificacao/:id', bodyparserJSON, async function(request, response){
+    
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//--------------------------ator----------------------------XX
+app.post('/v1/senai/locadora/classificacao', bodyparserJSON, async function(request, response){
+    let dados = request.body
+    
+    let contentType = request.headers['content-type']
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao', async function(request, response) {
+    let result 
+
+    response.status (result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.put('/v1/senai/locadora/classificacao/:id', bodyparserJSON, async function(request, response){
+    
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//------------------------diretor----------------------------XX
+app.post('/v1/senai/locadora/classificacao', bodyparserJSON, async function(request, response){
+    let dados = request.body
+    
+    let contentType = request.headers['content-type']
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao', async function(request, response) {
+    let result 
+
+    response.status (result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.put('/v1/senai/locadora/classificacao/:id', bodyparserJSON, async function(request, response){
+    
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+    let result 
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+
+
 app.listen(7070, function(){
     console.log('API aguardadndo novas requisições ...')
 })
