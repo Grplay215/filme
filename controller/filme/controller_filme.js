@@ -235,7 +235,6 @@ const validardados = async function(filme) {
         vegapunk.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     } else{
-        //tratamento para eliminar a chegada das aspas (') como caracter inválido
         
         return false
     }

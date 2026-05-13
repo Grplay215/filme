@@ -20,6 +20,7 @@ app.use(cors(corsOptions))
 
 //importar controller
 const controllerfilme = require('./controller/filme/controller_filme.js')
+const controllergenero = require('./controller/genero/controller_genero.js')
 
 //import do arquivo de funções
 app.post('/v1/senai/locadora/filme', bodyparserJSON, async function(request, response){
@@ -28,21 +29,17 @@ app.post('/v1/senai/locadora/filme', bodyparserJSON, async function(request, res
     
     //recebendo o tipo de dados da requisição para validar se é json
     let contentType = request.headers['content-type']
-
     let result = await controllerfilme.inserirNovoFilme(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)
-
 })
-
 app.get('/v1/senai/locadora/filme', async function(request, response) {
     let result = await controllerfilme.listarfilme()
 
     response.status (result.status_code)
     response.json(result)
 })
-
 app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
     let id = request.params.id
 
@@ -51,7 +48,6 @@ app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
     response.status(result.status_code)
     response.json(result)
 })
-
 app.put('/v1/senai/locadora/filme/:id', bodyparserJSON, async function(request, response){
     //recebe o content-type para validar se é jsom
     let contentType = request.headers['content-type']
@@ -70,7 +66,6 @@ app.put('/v1/senai/locadora/filme/:id', bodyparserJSON, async function(request, 
     response.status(result.status_code)
     response.json(result)
 })
-
 app.delete('/v1/senai/locadora/filme/:id', async function(request, response) {
     let id = request.params.id
     let result = await controllerfilme.excluirfilme(id)
@@ -78,7 +73,6 @@ app.delete('/v1/senai/locadora/filme/:id', async function(request, response) {
     response.status(result.status_code)
     response.json(result)
 })
-
 app.get('/v1/senai/locadora/help',  function (request, response) {
     let result = controllerfilme.help()
     let docAPI = {
@@ -105,6 +99,46 @@ app.get('/v1/senai/locadora/help',  function (request, response) {
     response.json(docAPI)
 })
 
+//-------------------------genero--------------------------
+app.post('/v1/senai/locadora/genero', bodyparserJSON, async function(request, response) {
+    let dados = request.body
+    let contentType = request.headers['content-type']
+    let result = await controllergenero.inserirnovogenero(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/genero', async function(request, response) {
+    let result = await controllergenero.listargenero()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.delete('/v1/senai/locadora/genero/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllergenero.excluirgenero(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.get('/v1/senai/locadora/genero/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllergenero.buscargenero(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+app.put('/v1/senai/locadora/genero/:id', bodyparserJSON, async function(request, response) {
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = await controllergenero.atualizargenero(dados, contentType, id)
+
+    
+    response.status(result.status_code)
+    response.json(result)
+})
 app.listen(7070, function(){
     console.log('API aguardadndo novas requisições ...')
 })
