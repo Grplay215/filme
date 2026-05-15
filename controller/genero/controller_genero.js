@@ -124,7 +124,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                 if(result.length>0){
                     vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
                     vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
-                    vegapunk.DEFAULT_MESSAGE.response.filme = result
+                    vegapunk.DEFAULT_MESSAGE.response.genero = result
 
                     return vegapunk.DEFAULT_MESSAGE //200
                 }else{

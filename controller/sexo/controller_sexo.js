@@ -1,19 +1,45 @@
 const configmessages = require('../modulo/configMessages.js')
 
-const classificacaoDAO = require('../../model/DAO/classificacao/classificacao.js')
+const sexoDAO = require('../../model/DAO/sexo/sexo.js')
 
 
-const inserirnovo = async function(classificacao, contentType) {
+const inserirnovosexo = async function(sexo, contentType) {
 
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
-        
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+                        let validar = await validardados(sexo)
+                        if (validar){
+                            return validar
+                        }else{
+                            let dadostratados = await tratardados(sexo)
+                            let resultado = await sexoDAO.insertsexo(dadostratados.sexo)
+                            
+                            console.log(sexo)
+                            if(resultado){
+                                sexo.id = resultado
+                                
+                                vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_CREATED_ITEM.status
+                                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_CREATED_ITEM.status_code
+                                vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_CREATED_ITEM.message
+                                vegapunk.DEFAULT_MESSAGE.response = sexo
+            
+
+                                
+                                return vegapunk.DEFAULT_MESSAGE
+                            }else{
+                                return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+                            }
+                        }
+                    }else{
+                        return vegapunk.ERROR_CONTENT_TYPE
+                    }
+
     } catch (error) {
-        //console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
     }
 }
-const atualizar = async function(classificacao, contentType, id) {
+const atualizarsexo = async function(sexo, contentType, id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
         
@@ -22,7 +48,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const listar = async function() {
+const listarsexo = async function() {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -31,7 +57,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const buscar = async function(id) {
+const buscarsexo = async function(id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -41,7 +67,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const excluir = async function(id) {
+const excluirsexo = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -51,28 +77,32 @@ const excluir = async function(id) {
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-
-const validardados = async function(classificacao) {
+const validardados = async function(sexo) {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(classificacao.classificacao == undefined || classificacao.classificacao == null || classificacao.classificacao == '' || classificacao.classificacao.length > 40){
-        vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
+    if(sexo.sigla == undefined || sexo.sigla == null || sexo.sigla == '' || sexo.sigla.length > 3){
+        vegapunk.ERROR_BAD_REQUEST.field = '[SIGLA] INVÁLIDO'
+        return vegapunk.ERROR_BAD_REQUEST
+    }
+    else if(sexo.sexo == undefined || sexo.sexo == null || sexo.sexo == '' || sexo.sexo.length > 15){
+        vegapunk.ERROR_BAD_REQUEST.field = '[SEXO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     }else{
         return false 
     }
 }
-const tratardados = async function(classificacao) {
-    classificacao.classificacao =    classificacao.classificacao.replaceAll("'", "")
+const tratardados = async function(sexo) {
+    sexo.sigla =    sexo.sigla.replaceAll("'", "")
+    sexo.sexo  =    sexo.sexo.replaceAll("'", "")
 
-    return genero
+    return sexo
 }
 
 module.exports ={
-    inserirnovo,
-    atualizar,
-    listar,
-    buscar,
-    excluir,
+    inserirnovosexo,
+    atualizarsexo,
+    listarsexo,
+    buscarsexo,
+    excluirsexo,
 }

@@ -60,7 +60,7 @@ const selectByIdclassificacao = async function(id) {
 const updateclassificacao = async function(classificacao) { 
     try {
         let sql = `update tbl_classificacao set
-                        genero            = '${classificacao.classificacao}'
+                        classificacao            = '${classificacao.classificacao}'
                     where id = ${classificacao.id}`
         
         let result = await knexConection.raw(sql)
@@ -87,6 +87,10 @@ const deleteclassificacao = async function(id) {
 }
 
 module.exports = {
-
+    insertclassificacao,
+    selectALLclassificacao,
+    selectByIdclassificacao,
+    updateclassificacao,
+    deleteclassificacao
 }
 

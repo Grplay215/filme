@@ -1,6 +1,6 @@
 const configmessages = require('../modulo/configMessages.js')
 
-const classificacaoDAO = require('../../model/DAO/classificacao/classificacao.js')
+const atorDAO = require('../../model/DAO/ator/ator.js')
 
 
 const inserirnovo = async function(classificacao, contentType) {
@@ -51,8 +51,7 @@ const excluir = async function(id) {
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-
-const validardados = async function(classificacao) {
+const validardados = async function() {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
@@ -63,7 +62,7 @@ const validardados = async function(classificacao) {
         return false 
     }
 }
-const tratardados = async function(classificacao) {
+const tratardados = async function() {
     classificacao.classificacao =    classificacao.classificacao.replaceAll("'", "")
 
     return genero

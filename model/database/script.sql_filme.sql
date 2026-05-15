@@ -10,6 +10,20 @@ use db_filmes_20261_b;
 #permite verificar as tabelas existentes dentro do database
 show tables;
 
+
+create table tbl_filmess (
+	id 					int not null auto_increment primary key,
+    nome 				varchar(80) not null,
+    sinopse 			text not null,
+    capa 				varchar(255) not null,
+    data_lancamento 	date not null,
+    duracao 			time not null,
+    valor 				decimal(5,2) default 0,
+    avaliacao 			decimal(3,2) default null
+);
+
+
+
 create table tbl_filme (
 	id 					int not null auto_increment primary key,
     nome 				varchar(80) not null,
@@ -18,21 +32,32 @@ create table tbl_filme (
     data_lancamento 	date not null,
     duracao 			time not null,
     valor 				decimal(5,2) default 0,
-    avaliacao 			decimal(3,2) default null,
-    id_genero int not null,
-    constraint fk_genero_filme
-    foreign key(id_genero)
-    references tbl_genero(id),
+    avaliacao 			decimal(3,2) default null
     
-    id_classificacao int not null,
-
-	constraint fk_classificacao_filme
-    foreign key(id_classificacao)
-    references tbl_classificacao(id)
 );
+
+#---------------------------------------------------------------------------------------------------------
+#id_genero int not null,
+#    constraint fk_genero_filme
+#    foreign key(id_genero)
+#    references tbl_genero(id),
+    
+#    id_classificacao int not null,
+
+#	constraint fk_classificacao_filme
+#    foreign key(id_classificacao)
+#    references tbl_classificacao(id)
+#--------------------------------------------------------------------------------------------------------------------
+
 
 #apaga a tabele desejada ou o database(ultimo caso)
 drop table tbl_filme;
+
+alter table tbl_filme_ator
+drop foreign key fk_filmeator;
+alter table tbl_filme_diretor
+drop foreign key fk_filmediretor;
+
 #drop database ;
 
 insert into tbl_filme(
@@ -169,6 +194,8 @@ create table tbl_filme_diretor(
     foreign key (id_diretor)
     references tbl_diretor(id)
 );
+
+desc tbl_sexo;
 
 
 
