@@ -53,8 +53,7 @@ create table tbl_filme (
 #apaga a tabele desejada ou o database(ultimo caso)
 drop table tbl_filme;
 
-alter table tbl_filme_ator
-drop foreign key fk_filmeator;
+
 alter table tbl_filme_diretor
 drop foreign key fk_filmediretor;
 
@@ -80,13 +79,9 @@ insert into tbl_filme(
 );
 delete from tbl_classificacao;
 
-alter table tbl_filme
-	add column id_classificacao int not null,
-	add constraint fk_classificacao_filme
-		foreign key (id_classificacao)
-        references tbl_classificacao(id);
+
         
-desc tbl_filme;
+desc tbl_sexo;
 
 select * from tbl_classificacao;
 select * from tbl_filme order by id desc;
@@ -119,13 +114,24 @@ insert into tbl_genero(
 
 create table tbl_classificacao(
 	id int not null auto_increment primary key,
-    classificacao varchar(30) not null
+    classificacao varchar(40) not null
 );
-
+desc tbl_classificacao;
+#--------------
+alter table tbl_filme
+drop foreign key fk_classificacao_filme;
+#--------------
+delete from tbl_classificacao;
+#--------------
+alter table tbl_filme
+	add constraint fk_classificacao_filme
+		foreign key (id_classificacao)
+        references tbl_classificacao(id);
+#--------------
 alter table tbl_classificacao
 	add column idade int not null,
     add column descricao varchar(100) not null;
-
+#--------------
 insert into tbl_classificacao(
 	classificacao
 ) values(

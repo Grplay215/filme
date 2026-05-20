@@ -1,6 +1,7 @@
 const configmessages = require('../modulo/configMessages.js')
 
 const sexoDAO = require('../../model/DAO/sexo/sexo.js')
+const validarIDClassificacao = require('../classificacao/controller_classificacao.js')
 
 const inserirnovosexo = async function(sexo, contentType) {
 
@@ -39,7 +40,33 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
 const atualizarsexo = async function(sexo, contentType, id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
-        
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+                let resultbuscar = await validarIDClassificacao.buscarclassificacao(id)
+                if(resultbuscar.status){
+                    let validar = await validardados(sexo)
+
+                    if(!validar){
+                        sexo.id = Number(id)
+
+                        let resultado = await sexoDAO.updatesexo(await tratardados(sexo))
+
+                        if(resultado){
+                            vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
+                            vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
+                            vegapunk.DEFAULT_MESSAGE.message        = vegapunk.SUCESS_UPDATED_ITEM.message
+                            vegapunk.DEFAULT_MESSAGE.response       = sexo 
+                        }else{
+                            return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+                        }
+                    }else{
+                        return validar
+                    }
+                }else{
+                    return resultbuscar
+                }
+        }else{
+            return vegapunk.ERROR_CONTENT_TYPE
+        }
     } catch (error) {
         console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
@@ -49,7 +76,10 @@ const listarsexo = async function() {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
-            
+            let result = await sexoDAO.selectALLsexo()
+            if(result){
+
+            }else
     } catch (error) {
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
