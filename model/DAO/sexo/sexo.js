@@ -3,28 +3,30 @@ const knex = require('knex')
 
 //import do arquivo de configuracao para acesso ao banco de dados
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
-const { json } = require('body-parser')
+const knexConection = knex(knexdatabaseConfig.development)
+
 
 
 const insertsexo = async function(sexo) {
     try {
         let sql = `insert into tbl_sexo(
-     sigla,
-     sexo
-) values(
-    '${sexo.sigla}',
-    '${sexo.sexo}'
-);`
+            sigla,
+            sexo
+        ) values(
+            '${sexo.sigla}',
+            '${sexo.sexo}'
+        );`
 
         let result = await knexConection.raw(sql)
-        
+
         if(result)
             return result[0].insertId
         else
         return false
 
     } catch (error) {
-        return false
+        return error
+        
     }
 }
 

@@ -78,8 +78,17 @@ insert into tbl_filme(
     '50.60',
     if('', null, 2)
 );
+delete from tbl_classificacao;
 
-select * from tbl_filme;
+alter table tbl_filme
+	add column id_classificacao int not null,
+	add constraint fk_classificacao_filme
+		foreign key (id_classificacao)
+        references tbl_classificacao(id);
+        
+desc tbl_filme;
+
+select * from tbl_classificacao;
 select * from tbl_filme order by id desc;
 select * from tbl_filme where id = 20;
 
@@ -112,6 +121,10 @@ create table tbl_classificacao(
 	id int not null auto_increment primary key,
     classificacao varchar(30) not null
 );
+
+alter table tbl_classificacao
+	add column idade int not null,
+    add column descricao varchar(100) not null;
 
 insert into tbl_classificacao(
 	classificacao

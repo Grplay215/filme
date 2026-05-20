@@ -13,7 +13,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                     return validar
                 }else{
                     let dadostratados = await tratardados(classificacao)
-                    let resultado = await classificacaoDAO.insertclassificacao(dadostratados.classificacao)
+                    let resultado = await classificacaoDAO.insertclassificacao(dadostratados)
     
                     if(resultado){
                         classificacao.id = resultado
@@ -48,12 +48,10 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         
                         if(!validar){
                             classificacao.id = Number(id)
-                            let dadostratados = await tratardados(classificacao)
-                            let resultado = await classificacaoDAO.updateclassificacao({
-                                id: classificacao.id,
-                                classificacao: dadostratados.classificacao})
+                            
+                            let resultado = await classificacaoDAO.updateclassificacao(await tratardados(classificacao))
+
                             if(resultado){
-        
                                 vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
                                 vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
                                 vegapunk.DEFAULT_MESSAGE.message        = vegapunk.SUCESS_UPDATED_ITEM.message
@@ -170,10 +168,19 @@ const validardados = async function(classificacao) {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(classificacao.classificacao == undefined || classificacao.classificacao == null || classificacao.classificacao == '' || classificacao.classificacao.length > 40){
+    if(classificacao.classificacao == undefined  || classificacao.classificacao == null || classificacao.classificacao == '' || classificacao.classificacao.length > 40){
         vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else{
+    }
+    else if(classificacao.idade == undefined     || classificacao.idade         == null || classificacao.idade         == '' || isNaN(classificacao.idade)){
+        vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
+        return vegapunk.ERROR_BAD_REQUEST
+    }
+    else if(classificacao.descricao == undefined || classificacao.descricao     == null || classificacao.descricao     == '' || classificacao.descricao.length > 100){
+        vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
+        return vegapunk.ERROR_BAD_REQUEST
+    }
+    else{
         return false 
     }
 }

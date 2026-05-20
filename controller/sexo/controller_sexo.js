@@ -2,7 +2,6 @@ const configmessages = require('../modulo/configMessages.js')
 
 const sexoDAO = require('../../model/DAO/sexo/sexo.js')
 
-
 const inserirnovosexo = async function(sexo, contentType) {
 
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
@@ -13,9 +12,8 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                             return validar
                         }else{
                             let dadostratados = await tratardados(sexo)
-                            let resultado = await sexoDAO.insertsexo(dadostratados.sexo)
+                            let resultado = await sexoDAO.insertsexo(dadostratados)
                             
-                            console.log(sexo)
                             if(resultado){
                                 sexo.id = resultado
                                 
@@ -23,8 +21,6 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                                 vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_CREATED_ITEM.status_code
                                 vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_CREATED_ITEM.message
                                 vegapunk.DEFAULT_MESSAGE.response = sexo
-            
-
                                 
                                 return vegapunk.DEFAULT_MESSAGE
                             }else{
@@ -36,6 +32,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                     }
 
     } catch (error) {
+        
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
     }
 }

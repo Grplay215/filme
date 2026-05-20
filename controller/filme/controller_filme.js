@@ -11,6 +11,9 @@ const configmessages = require('../modulo/configMessages.js')
 //import do arquivo do DAO para manipular os dados de filme no banco de dados
 const filmeDAO = require('../../model/DAO/filme/filme.js')
 
+//import das controllers
+const controllerClassificacao = require('../classificacao/controller_classificacao.js')
+const controllerGenero = require('../genero/controller_genero.js')
 
 //função para inserir um novo filme
 const inserirNovoFilme = async function(filme, contentType) { 
@@ -118,6 +121,22 @@ const listarfilme = async function() {
 
                 //validação para verificar se o conteudo do ARRAY tem dados de retorno ou ta vazio
                 if(result.length>0){
+
+                    //manipulação dos dados da classificação
+                    //percorre o array de filmes
+                    for (filme of result){
+                        //busca na controller da classificacao o id referente a fk da classificacao
+                        let resultclassificacao = await controllerClassificacao.buscarclassificacao(filme.id_classificacao)
+
+                        //se encontrar o id
+                        if(resultclassificacao.status){
+                            //adicionar um atributa classificacao no json do filme e colocar o resultado com os dados da classificacao
+                            filme.classificacao = resultclassificacao.response.classificacao
+                            //apaga o id_classificacao do json de filme
+                            delete filme.id_classificacao
+                        }
+                    }
+                
                     vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
                     vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
                     vegapunk.DEFAULT_MESSAGE.response.count = result.length
@@ -156,6 +175,20 @@ const buscarfilme = async function(id) {
             if(result){
                 //validação para verificar se o dao tem algum registro ou dado no array
                 if(result.length>0){
+
+                    for (filme of result){
+                        //busca na controller da classificacao o id referente a fk da classificacao
+                        let resultclassificacao = await controllerClassificacao.buscarclassificacao(filme.id_classificacao)
+
+                        //se encontrar o id
+                        if(resultclassificacao.status){
+                            //adicionar um atributa classificacao no json do filme e colocar o resultado com os dados da classificacao
+                            filme.classificacao = resultclassificacao.response.classificacao
+                            //apaga o id_classificacao do json de filme
+                            delete filme.id_classificacao
+                        }
+                    }
+
                     vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
                     vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
                     vegapunk.DEFAULT_MESSAGE.response.filme = result
@@ -232,6 +265,11 @@ const validardados = async function(filme) {
         return vegapunk.ERROR_BAD_REQUEST
     }else if(filme.avaliacao        == undefined                       || isNaN(filme.avaliacao)                || filme.avaliacao.length > 3){
         vegapunk.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
+        return vegapunk.ERROR_BAD_REQUEST
+    } 
+    //validação para a FK da classificacao
+    else if(filme.id_classificacao == undefined || filme.id_classificacao == '' || filme.id_classificacao == null || isNaN(filme.id_classificacao) || filme.id_classificacao <= 0){
+        vegapunk.ERROR_BAD_REQUEST.field = '[ID_CLASSIFICACAO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     } else{
         

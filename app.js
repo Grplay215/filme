@@ -191,10 +191,9 @@ app.delete('/v1/senai/locadora/classificacao/:id', async function(request, respo
 //--------------------------sexo----------------------------XX
 app.post('/v1/senai/locadora/sexo', bodyparserJSON, async function(request, response){
     let dados = request.body
-    
     let contentType = request.headers['content-type']
     let result = await controllersexo.inserirnovosexo(dados, contentType)
-
+    
     response.status(result.status_code)
     response.json(result)
 })
