@@ -79,7 +79,19 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
             let result = await sexoDAO.selectALLsexo()
             if(result){
 
-            }else
+                if(result.length>0){
+                    vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
+                    vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                    vegapunk.DEFAULT_MESSAGE.response.count = result.length
+                    vegapunk.DEFAULT_MESSAGE.response.classificacao = result
+
+                    return vegapunk.DEFAULT_MESSAGE
+                }else{
+                    return vegapunk.ERROR_NOT_FOUND
+                }
+            }else{
+                return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+            }
     } catch (error) {
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }

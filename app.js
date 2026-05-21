@@ -198,7 +198,7 @@ app.post('/v1/senai/locadora/sexo', bodyparserJSON, async function(request, resp
     response.json(result)
 })
 app.get('/v1/senai/locadora/sexo', async function(request, response) {
-    let result = await
+    let result = await controllersexo.listarsexo()
 
     response.status (result.status_code)
     response.json(result)
@@ -206,7 +206,7 @@ app.get('/v1/senai/locadora/sexo', async function(request, response) {
 app.get('/v1/senai/locadora/sexo/:id', async function(request, response) {
     let id = request.params.id
 
-    let result = await
+    let result = await controllersexo.buscarsexo(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -217,14 +217,14 @@ app.put('/v1/senai/locadora/sexo/:id', bodyparserJSON, async function(request, r
     let id = request.params.id
     let dados = request.body
 
-    let result = await
+    let result = await controllersexo.atualizarsexo(dados, contentType, id)
 
     response.status(result.status_code)
     response.json(result)
 })
 app.delete('/v1/senai/locadora/sexo/:id', async function(request, response) {
     let id = request.params.id
-    let result = await
+    let result = await controllersexo.excluirsexo(id)
 
     response.status(result.status_code)
     response.json(result)
