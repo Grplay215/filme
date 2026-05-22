@@ -13,11 +13,10 @@ const filmeDAO = require('../../model/DAO/filme/filme.js')
 
 //import das controllers
 const controllerClassificacao = require('../classificacao/controller_classificacao.js')
-const controllerGenero = require('../genero/controller_genero.js')
+const controllerfilmegenero = require('./controller_filme_genero.js')
 
 //função para inserir um novo filme
 const inserirNovoFilme = async function(filme, contentType) { 
-    //console.log(filme)
 
     //criar uma copia dos json do arquivo de configuração de mensagens
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
@@ -38,6 +37,19 @@ try {
         if(resultado){ //201
             //cria o id no json no filme e adiciona o ID gerado no DAO
             filme.id = resultado
+
+            //manipulação de dados para inserir os generos relacionados ao filme
+
+            //percorre l array de generos q chegara na requisição pelo objeto filme
+            for(itemfilme of filme.genero){
+            let filmegenero = {
+                            "id_filme": filme.id,
+                            "id_genero": itemfilme.id
+            }
+
+            let resultfilmegenero = await controllerfilmegenero.inserirNovoFilmeGenero(filmegenero)
+            console.log(resultfilmegenero)
+        }
 
             vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_CREATED_ITEM.status
             vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_CREATED_ITEM.status_code

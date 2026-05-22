@@ -83,7 +83,7 @@ delete from tbl_classificacao;
         
 desc tbl_sexo;
 
-select * from tbl_classificacao;
+select * from tbl_filme;
 select * from tbl_filme order by id desc;
 select * from tbl_filme where id = 20;
 
@@ -111,6 +111,19 @@ insert into tbl_genero(
     'aventura'
 );
 
+create table tbl_filme_genero(
+	id int not null auto_increment primary key, 
+    id_filme int not null,
+    id_genero int not null,
+    
+    constraint fk_filmegenero_filme
+    foreign key (id_filme)
+    references tbl_filme(id),
+    
+    constraint fk_generofilme_filme
+    foreign key (id_genero)
+    references tbl_genero(id)
+);
 
 create table tbl_classificacao(
 	id int not null auto_increment primary key,
@@ -119,7 +132,7 @@ create table tbl_classificacao(
 desc tbl_classificacao;
 #--------------
 alter table tbl_filme
-drop foreign key fk_classificacao_filme;
+drop foreign key fk_genero_filme;
 #--------------
 delete from tbl_classificacao;
 #--------------
