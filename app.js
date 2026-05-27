@@ -68,7 +68,6 @@ app.put('/v1/senai/locadora/filme/:id', bodyparserJSON, async function(request, 
     //chama a função para atualizar o filme, devemos encaminhar as 3 na mesma sequencia colocada na hr da criação da função na controller
     let result = await controllerfilme.atualizarfilme(dados, contentType, id)
 
-   
 
     response.status(result.status_code)
     response.json(result)

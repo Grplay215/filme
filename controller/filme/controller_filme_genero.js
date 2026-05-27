@@ -282,6 +282,33 @@ const excluirfilmeGenero =async function(id) {
     }
 }
 
+//função para excluir a relação de generos com o filme
+const excluirgenerosidfilme =async function(idfilme) {
+    let vegapunk = JSON.parse(JSON.stringify(configmessages))
+
+    try {
+
+        
+            let result = await filmegeneroDAO.deletegenerosByidFilme(idfilme)
+
+            if(result){
+                vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_DELETE_ITEM.status
+                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_DELETE_ITEM.message
+
+                console.log(vegapunk.DEFAULT_MESSAGE)
+                return vegapunk.DEFAULT_MESSAGE
+                
+            } else{
+                return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+            }
+
+        
+    } catch (error) {
+        return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 //função para validar os dados do filme
 const validardados = async function(filmegenero) {
 
@@ -309,5 +336,6 @@ module.exports = {
     buscarfilmeGenero,
     excluirfilmeGenero,
     buscarfilmesidgenero,
-    buscargenerosidfilme
+    buscargenerosidfilme,
+    excluirgenerosidfilme
 }

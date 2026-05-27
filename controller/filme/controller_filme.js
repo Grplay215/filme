@@ -48,13 +48,17 @@ try {
             }
 
             let resultfilmegenero = await controllerfilmegenero.inserirNovoFilmeGenero(filmegenero)
-            console.log(resultfilmegenero)
+            
+            //validaçã para verificar se todos os itens de relacionamento foram inseridos
+            if(!resultfilmegenero.status){
+                return vegapunk.SUCESS_CREATED_ITEM_WARNING // 202 com alerta de cadastro
+            }
         }
 
-            vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_CREATED_ITEM.status
-            vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_CREATED_ITEM.status_code
-            vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_CREATED_ITEM.message
-            vegapunk.DEFAULT_MESSAGE.response = filme
+            vegapunk.DEFAULT_MESSAGE.status       = vegapunk.SUCESS_CREATED_ITEM.status
+            vegapunk.DEFAULT_MESSAGE.status_code  = vegapunk.SUCESS_CREATED_ITEM.status_code
+            vegapunk.DEFAULT_MESSAGE.message      = vegapunk.SUCESS_CREATED_ITEM.message
+            vegapunk.DEFAULT_MESSAGE.response     = filme
 
             return vegapunk.DEFAULT_MESSAGE//201
         }else{ //erro 500(model)
@@ -95,6 +99,7 @@ const atualizarfilme = async function(filme, contentType, id) {
                         let result = await filmeDAO.updatFilme(await tratarDados(filme))
 
                         if(result){
+                            
                             vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
                             vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
                             vegapunk.DEFAULT_MESSAGE.message        = vegapunk.SUCESS_UPDATED_ITEM.message
@@ -147,6 +152,12 @@ const listarfilme = async function() {
                             //apaga o id_classificacao do json de filme
                             delete filme.id_classificacao
                         }
+
+                        //manipulação de dados para retornar os generos relacionados com o filme
+                        let resultgeneros = await controllerfilmegenero.buscargenerosidfilme(filme.id)
+                        if(resultgeneros.status){
+                            filme.genero = resultgeneros.response.filme_genero
+                        }
                     }
                 
                     vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
@@ -198,6 +209,16 @@ const buscarfilme = async function(id) {
                             filme.classificacao = resultclassificacao.response.classificacao
                             //apaga o id_classificacao do json de filme
                             delete filme.id_classificacao
+                        }
+
+                        let resultgeneros = await controllerfilmegenero.buscargenerosidfilme(filme.id)
+                        if(resultgeneros.status){
+                            filme.genero = resultgeneros.response.filme_genero
+                        } else{
+                            let filmegenero = {
+                                "id_filme": filme.id,
+                                "id_genero": itemfilme.id
+                }
                         }
                     }
 
