@@ -85,7 +85,7 @@ const atualizarfilme = async function(filme, contentType, id) {
             if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
                 //chama a função validar filme e validar se o id está correto, se ele existe no banco e se o filme existe
                 let resultbuscarfilme = await buscarfilme(id)
-
+                
                 if(resultbuscarfilme.status){
                     //chama a função para validar os dados para alteração do filme (body)
                     let validar = await validardados(filme)
@@ -97,8 +97,27 @@ const atualizarfilme = async function(filme, contentType, id) {
 
                         //chama a função para atualizar o filme no banco de dados
                         let result = await filmeDAO.updatFilme(await tratarDados(filme))
-
                         if(result){
+                            let resultDeleteGeneros = await controllerfilmegenero.excluirfilmeGenero(filme.id)
+                            
+                        if(resultDeleteGeneros.status){
+                            //Percorre o array de generos que chegará na 
+                            // requisição pelo objeto Filme
+                            for(itemGenero of filme.genero){
+                                let filmeGenero = {
+                                                "id_filme":  filme.id,
+                                                "id_genero": itemGenero.id
+                                }
+
+                                let resultFilmeGenero = await controllerfilmegenero.inserirNovoFilmeGenero(filmeGenero)
+
+                                //Validação para verificar se todos os itens de relacionamento foram inseridos
+                                if(!resultFilmeGenero.status){
+                                    return customMessage.SUCCESS_CREATED_ITEM_WARNING //201 com alerta de cadastro
+                                }
+            
+                            }
+                        }
                             
                             vegapunk.DEFAULT_MESSAGE.status         = vegapunk.SUCESS_UPDATED_ITEM.status
                             vegapunk.DEFAULT_MESSAGE.status_code    = vegapunk.SUCESS_UPDATED_ITEM.status_code
@@ -120,7 +139,7 @@ const atualizarfilme = async function(filme, contentType, id) {
             }
             
         } catch (error) {
-            return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controller
+            console.log(error)//500 controller
         }
 }
 
@@ -214,13 +233,9 @@ const buscarfilme = async function(id) {
                         let resultgeneros = await controllerfilmegenero.buscargenerosidfilme(filme.id)
                         if(resultgeneros.status){
                             filme.genero = resultgeneros.response.filme_genero
-                        } else{
-                            let filmegenero = {
-                                "id_filme": filme.id,
-                                "id_genero": itemfilme.id
-                }
+                        } 
                         }
-                    }
+                    
 
                     vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_RESPONSE.status
                     vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
@@ -238,6 +253,7 @@ const buscarfilme = async function(id) {
         
         
     } catch (error) {
+        console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER//500(controller)
     }
 

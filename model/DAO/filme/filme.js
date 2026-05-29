@@ -61,7 +61,7 @@ const updatFilme = async function(filme) {
                         data_lancamento  = '${filme.data_lancamento}',
                         duracao          = '${filme.duracao}',
                         valor            = if('${filme.valor}' = '', 0, '${filme.valor}'),
-                        avaliacao        = if('${filme.avaliacao}' = '', null, '${filme.avaliacao}')
+                        avaliacao        = if('${filme.avaliacao}' = '', null, '${filme.avaliacao}'),
                         id_classificacao = ${filme.id_classificacao}
                     where id = ${filme.id}`
 

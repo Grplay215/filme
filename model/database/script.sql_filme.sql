@@ -110,7 +110,7 @@ insert into tbl_genero(
 ) values(
     'aventura'
 );
-
+select * from tbl_filme_genero;
 create table tbl_filme_genero(
 	id int not null auto_increment primary key, 
     id_filme int not null,
