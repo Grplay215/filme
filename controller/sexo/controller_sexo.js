@@ -122,7 +122,6 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-
 const excluirsexo = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
@@ -155,7 +154,7 @@ const tratardados = async function(sexo) {
     return sexo
 }
 
-module.exports ={
+module.exports = {
     inserirnovosexo,
     atualizarsexo,
     listarsexo,

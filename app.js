@@ -234,7 +234,7 @@ app.post('/v1/senai/locadora/ator', bodyparserJSON, async function(request, resp
     let dados = request.body
     
     let contentType = request.headers['content-type']
-    let result = await 
+    let result = await controllerator(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)

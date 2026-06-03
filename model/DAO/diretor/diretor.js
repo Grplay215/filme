@@ -3,16 +3,19 @@ const knex = require('knex')
 
 //import do arquivo de configuracao para acesso ao banco de dados
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
-const { json } = require('body-parser')
+const knexConection = knex(knexdatabaseConfig.development)
 
 
-const insert = async function() {
+
+const insertdiretor = async function(diretor) {
     try {
-        let sql = `insert into tbl_(
-    
-) values(
-    ''
-);`
+        let sql = `insert into tbl_sexo(
+            nome,
+            idade
+        ) values(
+            '${diretor.nome}',
+            '${diretor.idade}'
+        );`
 
         let result = await knexConection.raw(sql)
 
@@ -22,14 +25,15 @@ const insert = async function() {
         return false
 
     } catch (error) {
-        return false
+        return error
+        
     }
 }
 
-const selectALL = async function() {
+const selectALLdiretor = async function() {
     try {
             
-        let sql = 'select * from tbl_ order by id desc'
+        let sql = 'select * from tbl_diretor order by id desc'
             
         let result = await knexConection.raw(sql)
         if(result && result[0]){
@@ -43,9 +47,9 @@ const selectALL = async function() {
     }
 }
 
-const selectById = async function(id) { 
+const selectByIddiretor = async function(id) { 
     try {
-        let sql = `select * from tbl_ where id = ${id}`
+        let sql = `select * from tbl_diretor where id = ${id}`
 
         let result = await knexConection.raw(sql)
         if(Array.isArray(result)){
@@ -58,10 +62,11 @@ const selectById = async function(id) {
     }
 }
 
-const update = async function() { 
+const updatediretor = async function(diretor) { 
     try {
-        let sql = `update tbl_ set
-                        genero            = '${p}'
+        let sql = `update tbl_diretor set
+                        nome                    =    ${diretor.nome},
+                        idade                   =    ${diretor.idade}
                     where id = ${id}`
         
         let result = await knexConection.raw(sql)
@@ -75,9 +80,9 @@ const update = async function() {
     }
 }
 
-const delet = async function(id) { 
+const deletdiretor = async function(id) { 
     try {
-        let sql = `delete from tbl_ where id = ${id}`
+        let sql = `delete from tbl_diretor where id = ${id}`
        let result = await knexConection.raw(sql)
       
        return result
@@ -87,6 +92,10 @@ const delet = async function(id) {
     }
 }
 
-module.exports = {
-
+module.exports; {
+    insertdiretor,
+    selectALLdiretor,
+    selectByIddiretor,
+    updatediretor,
+    deletdiretor
 }
