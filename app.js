@@ -20,8 +20,7 @@ app.use(cors(corsOptions))
 
 //importar controller
 const controllerfilme = require('./controller/filme/controller_filme.js')
-const controllergenero = require('./controller/genero/controller_genero.js')
-const controllerclassificacao = require('./controller/classificacao/controller_classificacao.js')
+
 const controllerator = require('./controller/ator/controller_ator.js')
 const controllerdiretor = require('./controller/diretor/controller_diretor.js')
 const controllersexo = require('./controller/sexo/controller_sexo.js')
@@ -105,87 +104,14 @@ app.get('/v1/senai/locadora/help',  function (request, response) {
     response.json(docAPI)
 })
 
-//-------------------------genero--------------------------
-app.post('/v1/senai/locadora/genero', bodyparserJSON, async function(request, response) {
-    let dados = request.body
-    let contentType = request.headers['content-type']
-    let result = await controllergenero.inserirnovogenero(dados, contentType)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/genero', async function(request, response) {
-    let result = await controllergenero.listargenero()
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.delete('/v1/senai/locadora/genero/:id', async function(request, response) {
-    let id = request.params.id
-    let result = await controllergenero.excluirgenero(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/genero/:id', async function(request, response) {
-    let id = request.params.id
-    let result = await controllergenero.buscargenero(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.put('/v1/senai/locadora/genero/:id', bodyparserJSON, async function(request, response) {
-    let contentType = request.headers['content-type']
-    let id = request.params.id
-    let dados = request.body
-
-    let result = await controllergenero.atualizargenero(dados, contentType, id)
-
-
-    response.status(result.status_code)
-    response.json(result)
-})
+//-------------------------genero--------------------------XX
+//import do arquivo de rotas do genero
+const generorouter = require('./routes/genero.router.js')
+app.use('/v1/senai/locadora/genero', cors(), generorouter)
 
 //-----------------------classificação----------------------XX
-app.post('/v1/senai/locadora/classificacao', bodyparserJSON, async function(request, response){
-    let dados = request.body
-    let contentType = request.headers['content-type']
-    let result = await controllerclassificacao.inserirnovaclassificacao(dados, contentType)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/classificacao', async function(request, response) {
-    let result = await controllerclassificacao.listarclassificacao()
-
-    response.status (result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
-    let id = request.params.id
-    let result = await controllerclassificacao.buscarclassificacao(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.put('/v1/senai/locadora/classificacao/:id', bodyparserJSON, async function(request, response){
-    
-    let contentType = request.headers['content-type']
-    let id = request.params.id
-    let dados = request.body
-
-    let result = await controllerclassificacao.atualizarclassificacao(dados, contentType, id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
-    let id = request.params.id
-    let result = await controllerclassificacao.excluirclassificacao(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
+const classificacaorouter = require('./routes/classificacao.router.js')
+app.use('/v1/senai/locadora/classificacao', cors(), classificacaorouter)
 
 //--------------------------sexo----------------------------XX
 app.post('/v1/senai/locadora/sexo', bodyparserJSON, async function(request, response){

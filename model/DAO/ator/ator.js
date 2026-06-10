@@ -9,7 +9,7 @@ const knexConection = knex(knexdatabaseConfig.development)
 
 const insertator = async function(ator) {
     try {
-        let sql = `insert into tbl_sexo(
+        let sql = `insert into tbl_ator(
             nome,
             idade,
             personagem,

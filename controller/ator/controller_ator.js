@@ -78,7 +78,7 @@ const validardados = async function() {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(classificacao.classificacao == undefined || classificacao.classificacao == null || classificacao.classificacao == '' || classificacao.classificacao.length > 40){
+    if(autor.nome == undefined || autor.nome == null || autor.nome == '' || autor.nome.length > 40){
         vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     }else{
