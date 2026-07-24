@@ -32,6 +32,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
                 return vegapunk.ERROR_CONTENT_TYPE
             }
         } catch (error) {
+           
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
         }
 }
@@ -168,11 +169,7 @@ const validardados = async function(classificacao) {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(classificacao.classificacao == undefined  || classificacao.classificacao == null || classificacao.classificacao == '' || classificacao.classificacao.length > 40){
-        vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
-        return vegapunk.ERROR_BAD_REQUEST
-    }
-    else if(classificacao.idade == undefined     || classificacao.idade         == null || classificacao.idade         == '' || isNaN(classificacao.idade)){
+    if(classificacao.idade == undefined     || classificacao.idade         == null || classificacao.idade         == '' || isNaN(classificacao.idade)){
         vegapunk.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
     }
@@ -186,7 +183,8 @@ const validardados = async function(classificacao) {
 }
 
 const tratardados = async function(classificacao) {
-    classificacao.classificacao =    classificacao.classificacao.replaceAll("'", "")
+
+    classificacao.descricao =    classificacao.descricao.replaceAll("'", "")
 
     return classificacao
 }

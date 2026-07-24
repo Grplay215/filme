@@ -69,11 +69,11 @@ const selectByIdator = async function(id) {
 const updateator = async function(ator) { 
     try {
         let sql = `update tbl_ator set
-                        nome                    =    ${ator.nome},
+                        nome                    =    '${ator.nome}',
                         idade                   =    ${ator.idade},
-                        personagem              =    ${ator.personagem},
+                        personagem              =    '${ator.personagem}',
                         ano_inicio_carreira     =    if('${ator.ano_inicio_carreira}' = '', 0, '${ator.ano_inicio_carreira}')
-                    where id = ${id}`
+                    where id = ${ator.id}`
         
         let result = await knexConection.raw(sql)
         if(result)

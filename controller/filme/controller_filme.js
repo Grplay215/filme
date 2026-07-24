@@ -70,6 +70,7 @@ try {
         return vegapunk.ERROR_CONTENT_TYPE
     } 
 } catch (error) {
+        console.log(error)
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500(controller)
 }
 

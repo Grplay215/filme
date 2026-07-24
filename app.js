@@ -18,8 +18,11 @@ const corsOptions = {
 //aplica as configurações do cors no app (EXPRESS)
 app.use(cors(corsOptions))
 
+
 //importar controller
-const controllerfilme = require('./controller/filme/controller_filme.js')
+
+//onde se encontra a help
+const controllerhelp = require('./controller/filme/controller_filme.js')
 
 const controllerator = require('./controller/ator/controller_ator.js')
 const controllerdiretor = require('./controller/diretor/controller_diretor.js')
@@ -28,92 +31,20 @@ const controllersexo = require('./controller/sexo/controller_sexo.js')
 //const controller = require('./controller')
 
 //import do arquivo de funções
-//-------------------------------filmes-------------------------------
-app.post('/v1/senai/locadora/filme', bodyparserJSON, async function(request, response){
-    //recebendo o body da requisição
-    let dados = request.body
-    
-    //recebendo o tipo de dados da requisição para validar se é json
-    let contentType = request.headers['content-type']
-    let result = await controllerfilme.inserirNovoFilme(dados, contentType)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/filme', async function(request, response) {
-    let result = await controllerfilme.listarfilme()
-
-    response.status (result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
-    let id = request.params.id
-
-    let result = await controllerfilme.buscarfilme(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.put('/v1/senai/locadora/filme/:id', bodyparserJSON, async function(request, response){
-    //recebe o content-type para validar se é jsom
-    let contentType = request.headers['content-type']
-
-    //recebe o id do registro a ser atualizado
-    let id = request.params.id
-
-    //recebe os dados do body q serão atualizados/modificados no BD
-    let dados = request.body
-
-    //chama a função para atualizar o filme, devemos encaminhar as 3 na mesma sequencia colocada na hr da criação da função na controller
-    let result = await controllerfilme.atualizarfilme(dados, contentType, id)
-
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.delete('/v1/senai/locadora/filme/:id', async function(request, response) {
-    let id = request.params.id
-    let result = await controllerfilme.excluirfilme(id)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-app.get('/v1/senai/locadora/help',  function (request, response) {
-    let result = controllerfilme.help()
-    let docAPI = {
-        "api-description": "API para manipular dados de filmes de uma locadora",
-        "date": "2026-05-06",
-        "development": "Gabriel Renato",
-        "version": 1.18,
-        "endpoints": [
-            {   "rota1": "/v1/senai/locadora/filme",
-                "description": "Para adicionar um novo filme no Banco de Dados da locadora"
-            },
-            {   "rota2": "/v1/senai/locadora/filme",
-                "description": "Retorna a lista de todos os filmes cadastrados na locadora"
-            },
-            {   "rota3": "/v1/senai/locadora/filme/:id",
-                "description": "Retorna um filme buscando pelo id"
-            },
-            {   "rota4": "/v1/senai/locadora/filme/:id",
-                "description": "Apaga o filme desejado pelo id"
-            },
-        ]
-    }
-    response.status(result.status_code)
-    response.json(docAPI)
-})
+//-------------------------filmes--------------------------xx
+const filmerouter = require('./routes/filmes.router.js')
+app.use('/v1/senai/locadora/filme', cors(), filmerouter)
 
 //-------------------------genero--------------------------XX
 //import do arquivo de rotas do genero
 const generorouter = require('./routes/genero.router.js')
 app.use('/v1/senai/locadora/genero', cors(), generorouter)
 
-//-----------------------classificação----------------------XX
+//----------------------classificação----------------------XX
 const classificacaorouter = require('./routes/classificacao.router.js')
 app.use('/v1/senai/locadora/classificacao', cors(), classificacaorouter)
 
-//--------------------------sexo----------------------------XX
+//--------------------------sexo---------------------------XX
 app.post('/v1/senai/locadora/sexo', bodyparserJSON, async function(request, response){
     let dados = request.body
     let contentType = request.headers['content-type']
@@ -155,18 +86,19 @@ app.delete('/v1/senai/locadora/sexo/:id', async function(request, response) {
     response.json(result)
 })
 
+
 //--------------------------ator----------------------------XX
 app.post('/v1/senai/locadora/ator', bodyparserJSON, async function(request, response){
     let dados = request.body
     
     let contentType = request.headers['content-type']
-    let result = await controllerator(dados, contentType)
+    let result = await controllerator.inserirnovoator(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)
 })
 app.get('/v1/senai/locadora/ator', async function(request, response) {
-    let result  = await
+    let result  = await controllerator.listar()
 
     response.status (result.status_code)
     response.json(result)
@@ -174,7 +106,7 @@ app.get('/v1/senai/locadora/ator', async function(request, response) {
 app.get('/v1/senai/locadora/ator/:id', async function(request, response) {
     let id = request.params.id
 
-    let result  = await
+    let result  = await controllerator.buscar(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -185,7 +117,7 @@ app.put('/v1/senai/locadora/ator/:id', bodyparserJSON, async function(request, r
     let id = request.params.id
     let dados = request.body
 
-    let result = await
+    let result = await controllerator.atualizar(dados, contentType, id)
 
     response.status(result.status_code)
     response.json(result)
@@ -197,6 +129,7 @@ app.delete('/v1/senai/locadora/ator/:id', async function(request, response) {
     response.status(result.status_code)
     response.json(result)
 })
+
 
 //------------------------diretor----------------------------XX
 app.post('/v1/senai/locadora/diretor', bodyparserJSON, async function(request, response){
@@ -242,6 +175,33 @@ app.delete('/v1/senai/locadora/diretor/:id', async function(request, response) {
 })
 
 
+
+
+app.get('/v1/senai/locadora/help',  function (request, response) {
+    let result = controllerhelp.help()
+    let docAPI = {
+        "api-description": "API para manipular dados de filmes de uma locadora",
+        "date": "2026-05-06",
+        "development": "Gabriel Renato",
+        "version": 1.18,
+        "endpoints": [
+            {   "rota1": "/v1/senai/locadora/filme",
+                "description": "Para adicionar um novo filme no Banco de Dados da locadora"
+            },
+            {   "rota2": "/v1/senai/locadora/filme",
+                "description": "Retorna a lista de todos os filmes cadastrados na locadora"
+            },
+            {   "rota3": "/v1/senai/locadora/filme/:id",
+                "description": "Retorna um filme buscando pelo id"
+            },
+            {   "rota4": "/v1/senai/locadora/filme/:id",
+                "description": "Apaga o filme desejado pelo id"
+            },
+        ]
+    }
+    response.status(result.status_code)
+    response.json(docAPI)
+})
 
 
 app.listen(7070, function(){
