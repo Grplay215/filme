@@ -98,7 +98,7 @@ app.post('/v1/senai/locadora/ator', bodyparserJSON, async function(request, resp
     response.json(result)
 })
 app.get('/v1/senai/locadora/ator', async function(request, response) {
-    let result  = await controllerator.listar()
+    let result  = await controllerator.listarator()
 
     response.status (result.status_code)
     response.json(result)
@@ -106,7 +106,7 @@ app.get('/v1/senai/locadora/ator', async function(request, response) {
 app.get('/v1/senai/locadora/ator/:id', async function(request, response) {
     let id = request.params.id
 
-    let result  = await controllerator.buscar(id)
+    let result  = await controllerator.buscarator(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -117,14 +117,14 @@ app.put('/v1/senai/locadora/ator/:id', bodyparserJSON, async function(request, r
     let id = request.params.id
     let dados = request.body
 
-    let result = await controllerator.atualizar(dados, contentType, id)
+    let result = await controllerator.atualizarator(dados, contentType, id)
 
     response.status(result.status_code)
     response.json(result)
 })
 app.delete('/v1/senai/locadora/ator/:id', async function(request, response) {
     let id = request.params.id
-    let result = await
+    let result = await controllerator.excluirator(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -136,7 +136,7 @@ app.post('/v1/senai/locadora/diretor', bodyparserJSON, async function(request, r
     let dados = request.body
     
     let contentType = request.headers['content-type']
-    let result = await 
+    let result = await controllerdiretor.inserirnovo
 
     response.status(result.status_code)
     response.json(result)

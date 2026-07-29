@@ -36,7 +36,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
     }
 }
-const atualizar = async function(ator, contentType, id) {
+const atualizarator = async function(ator, contentType, id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
@@ -76,7 +76,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const listar = async function() {
+const listarator = async function() {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -100,7 +100,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const buscar = async function(id) {
+const buscarator = async function(id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -127,10 +127,29 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const excluir = async function(id) {
+const excluirator = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
+
+        let validar = await validarID.buscarclassificacao(id)
+                
+                            if(validar.status){
+                                let result = await atorDAO.deletator(id)
+                                if(result){
+                
+                                vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_DELETE_ITEM.status
+                                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                                vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_DELETE_ITEM.message
+                
+                                return vegapunk.DEFAULT_MESSAGE
+                
+                                }else{
+                                    return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+                                }
+                            }else{
+                                return validar
+                            }
         
     } catch (error) {
         console.log(error)
@@ -141,23 +160,31 @@ const validardados = async function(ator) {
 
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
-    if(ator.nome == undefined || ator.nome == null || ator.nome == '' || ator.nome.length > 40){
+    if(ator.nome == undefined || ator.nome == null || ator.nome == '' || ator.nome.length > 100){
         vegapunk.ERROR_BAD_REQUEST.field = '[ATOR] INVÁLIDO'
         return vegapunk.ERROR_BAD_REQUEST
-    }else{
+    }
+    else if(ator.personagem == undefined || ator.personagem == null || ator.personagem == '' || ator.personagem.length > 100){
+        vegapunk.ERROR_BAD_REQUEST.field = '[ATOR] INVÁLIDO'
+        return vegapunk.ERROR_BAD_REQUEST
+    }
+    else {
         return false 
     }
 }
 const tratardados = async function(ator) {
-    ator.nome =    ator.nome.replaceAll("'", "")
+    ator.nome =    ator.nome.replaceAll("'", ""),
+    ator.idade =    ator.idade.replaceAll("'", ""),
+    ator.personagem = ator.personagem.replaceAll("'", ""),
+    ator.ano_inicio_carreira = ator.ano_inicio_carreira.replaceAll("'", "")
 
     return ator
 }
 
 module.exports ={
     inserirnovoator,
-    atualizar,
-    listar,
-    buscar,
-    excluir,
+    atualizarator,
+    listarator,
+    buscarator,
+    excluirator,
 }

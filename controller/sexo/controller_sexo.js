@@ -126,6 +126,25 @@ const excluirsexo = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
+
+        let validar = await validarIDClassificacao.buscarclassificacao(id)
+                
+                            if(validar.status){
+                                let result = await sexoDAO.deletsexo(id)
+                                if(result){
+                
+                                vegapunk.DEFAULT_MESSAGE.status = vegapunk.SUCESS_DELETE_ITEM.status
+                                vegapunk.DEFAULT_MESSAGE.status_code = vegapunk.SUCESS_RESPONSE.status_code
+                                vegapunk.DEFAULT_MESSAGE.message = vegapunk.SUCESS_DELETE_ITEM.message
+                
+                                return vegapunk.DEFAULT_MESSAGE
+                
+                                }else{
+                                    return vegapunk.ERROR_INTERNAL_SERVER_MODEL
+                                }
+                            }else{
+                                return validar
+                            }
         
     } catch (error) {
         console.log(error)

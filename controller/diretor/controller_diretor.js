@@ -3,7 +3,7 @@ const configmessages = require('../modulo/configMessages.js')
 const diretorDAO = require('../../model/DAO/diretor/diretor.js')
 
 
-const inserirnovo = async function(classificacao, contentType) {
+const inserirnovodiretor = async function(classificacao, contentType) {
 
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
@@ -13,7 +13,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
     }
 }
-const atualizar = async function(classificacao, contentType, id) {
+const atualizardiretor = async function(classificacao, contentType, id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
     try {
         
@@ -22,7 +22,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const listar = async function() {
+const listardiretor = async function() {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -31,7 +31,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const buscar = async function(id) {
+const buscardiretor = async function(id) {
 let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
@@ -41,7 +41,7 @@ let vegapunk = JSON.parse(JSON.stringify(configmessages))
         return vegapunk.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-const excluir = async function(id) {
+const excluirdiretor = async function(id) {
     let vegapunk = JSON.parse(JSON.stringify(configmessages))
 
     try {
